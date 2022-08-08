@@ -25,18 +25,39 @@ class Runtime:
     def __init__(self):
         self.lines = []
 
+    def _serialize(self, l: list) -> list[str]:
+        multiline = False
+        for e in l:
+            if isinstance(e, list):
+                multiline = True
+                break
+
+        values: list[str] = []
+
+        if multiline:
+            for e in l:
+                if isinstance(e, list):
+                    for v in self._serialize(e):
+                        values.append(v)
+                    continue
+                if v is not None:
+                    values.append(str(e))
+            return values
+
+        for e in l:
+            if e is not None:
+                values.append(str(e))
+        return [" ".join(values)]
+
     def execute(self, c: Command):
-        l = []
-        for v in c.generate():
-            if v is not None:
-                l.append(str(v))
-        self.lines.append(" ".join(l))
+        for l in self._serialize(c.generate()):
+            self.lines.append(l)
 
     def done(self, file: TextIOWrapper):
         file.write("\n".join(self.lines))
         file.close()
 
-def mcfunction(namespace: Namespace, unique: bool = False):
+def mcfunction(namespace: Namespace, preserve_name: bool = False):
     def decorator(f: Callable[[Runtime, T], None]):
         def wrapper(args: T):
             if f.__name__ not in calls:
@@ -45,7 +66,7 @@ def mcfunction(namespace: Namespace, unique: bool = False):
             runner = Runtime()
             f(runner, args)
 
-            if unique:
+            if preserve_name:
                 namespace.addFunction(f.__name__, runner)
                 return namespace.getID(f.__name__)
 

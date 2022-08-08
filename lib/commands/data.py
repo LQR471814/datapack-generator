@@ -3,9 +3,9 @@ from typing import Optional
 
 from lib.commands import Command
 from lib.common.nbt import NBT
-from lib.common.types import AbsolutePosition, RelativePosition, SEnum, Storage, Target
+from lib.common.types import Position, RelativePosition, SEnum, Storage, Target
 
-Source = RelativePosition | AbsolutePosition | Target | Storage
+Source = RelativePosition | Position | Target | Storage
 
 # Get
 

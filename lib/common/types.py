@@ -10,16 +10,40 @@ class SEnum(Enum):
         return str(self.value)
 
 @dataclass
-class AbsolutePosition:
+class Position:
     x: int
     y: int
     z: int
+
+    def volume(self) -> float:
+        return abs(self.x * self.y * self.z)
+
+    def abs(self):
+        return Position(
+            abs(self.x),
+            abs(self.y),
+            abs(self.z),
+        )
+
+    def add(self, pos: 'Position'):
+        return Position(
+            self.x + pos.x,
+            self.y + pos.y,
+            self.z + pos.z,
+        )
+
+    def difference(self, pos: 'Position'):
+        return Position(
+            self.x - pos.x,
+            self.y - pos.y,
+            self.z - pos.z,
+        )
 
     def __str__(self):
         return f"{self.x} {self.y} {self.z}"
 
 @dataclass
-class RelativePosition:
+class RelativePosition(Position):
     x: int = 0
     y: int = 0
     z: int = 0
@@ -29,8 +53,6 @@ class RelativePosition:
         y = f"~{self.y}" if self.y != 0 else "~"
         z = f"~{self.z}" if self.z != 0 else "~"
         return f"{x} {y} {z}"
-
-Position = AbsolutePosition | RelativePosition
 
 class TargetSelector(SEnum):
     nearestPlayer = "@p"
