@@ -1,0 +1,23 @@
+maxCommandChainLength
+    one should invoke
+        /gamerule maxCommandChainLength <length>
+    at the start of the output file if the output's length
+    is larger than the default "65536"
+
+datapack folder structure
+    <datapack name>/
+        pack.mcmeta
+        pack.png
+        data/
+            <namespace>/
+                functions/
+                    <function>.mcfunction
+                    subfolder/
+                        <function>.mcfunction
+
+invoking a function
+    /function namespace:subfolder/function
+
+function context
+    by default, it will use the entity and position of the invoker
+    unless explicitly changed with /execute
